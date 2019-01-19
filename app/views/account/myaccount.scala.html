@@ -1,0 +1,54 @@
+@(user: models.users.User, env: play.api.Environment)
+@main("My Account", user) {
+
+
+    <div class="container " id="content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" id="user-order-display">
+            <div class="row">
+                @if(flash.containsKey("success")) {
+                    <div class="alert alert-success text-center">
+                    @flash.get("success")
+                    </div>
+                }
+                @if(flash.containsKey("danger")) {
+                    <div class="alert alert-danger text-center">
+                    @flash.get("danger")
+                    </div>
+                }
+                <h1>My Account</h1>
+                <hr>
+                <a href = "@routes.HomeController.myOrders()" class="btn btn-success btn-lg" id="user-order-button">
+                    <span class="glyphicon glyphicon-calendar"></span>My Orders
+                </a>
+
+                <a href = "@routes.HomeController.updateDetails()" class="btn btn-success btn-lg" id="user-account-button">
+                    <span class="glyphicon glyphicon-user"></span>Update Details
+                </a>
+
+
+                <a href = "@routes.LoginController.deleteAccountPage()" type="button" class="btn btn-success btn-lg" id="user-delete-button">
+                    <span class="glyphicon glyphicon-trash"></span>Delete Account
+                </a>
+
+                <a href = "@routes.HomeController.reportProblem()" type="button" class="btn btn-success btn-lg" id="user-problem-button">
+                    <span class="glyphicon glyphicon-envelope"></span>Report problem
+                </a>
+
+                <hr>
+
+                    <div class="thumbnail">
+                    @if(env.resource("public/images/profile/" + user.getEmail + ".jpg").isDefined) {
+                        <img class="img-circle img-responsive" src="/assets/images/profile/@(user.getEmail + ".jpg")"/>
+                    } else {
+                        <img class="img-circle img-responsive" src="/assets/images/profile/noImage.png" alt="" >
+                    }
+                    <h3 class="text-center"><span class="greentext">Name: </span>@user.getName</h3>
+                    <h3 class="text-center"><span class="greentext">Email: </span>@user.getEmail</h3>
+                    <h3 class="text-center"><span class="greentext">Role:</span> @user.getRole</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+}

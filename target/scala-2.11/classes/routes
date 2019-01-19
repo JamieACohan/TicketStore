@@ -1,0 +1,66 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+GET     /contact                    controllers.HomeController.contact
+GET     /viewContact                controllers.HomeController.viewContact
+GET     /viewOrders                controllers.HomeController.viewOrders
+GET     /events                     controllers.HomeController.events(cat:Long ?=0L)
+GET     /eventticket                controllers.HomeController.eventTicket(event:Long ?=0L)
+GET     /listEvents                 controllers.EventController.listEvents(cat:Long ?= 0, filter ?="")
+
+#login/sign up
+GET     /login                      controllers.LoginController.login
+POST    /loginSubmit                controllers.LoginController.loginSubmit()
+GET     /signup                     controllers.HomeController.signUp
+GET     /signUpSubmit               controllers.HomeController.signUpSubmit()
+GET     /logout                     controllers.LoginController.logout
+
+#my account
+GET     /myaccount                  controllers.HomeController.myAccount
+GET     /myOrders                   controllers.HomeController.myOrders
+GET     /deleteAccount              controllers.LoginController.deleteAccountPage
+GET    /deleteMyAccount             controllers.LoginController.deleteMyAccount
+GET    /reportProblem               controllers.HomeController.reportProblem
+GET    /updateDetails               controllers.HomeController.updateDetails
+POST    /updateDetails               controllers.HomeController.updateDetailsSubmit
+
+# Shopping
+GET     /showBasket                 controllers.ShoppingCtrl.showBasket()
+GET     /addToBasket/:id            controllers.ShoppingCtrl.addToBasket(id: Long)
+GET     /addOne/:itemId             controllers.ShoppingCtrl.addOne(itemId: Long)
+GET     /removeOne/:itemId          controllers.ShoppingCtrl.removeOne(itemId: Long)
+GET     /removeFromCart:itemId      controllers.ShoppingCtrl.removeFromCart(itemId:Long)
+GET     /emptyBasket                controllers.ShoppingCtrl.emptyBasket()
+GET     /placeOrder                 controllers.ShoppingCtrl.placeOrder()
+GET     /viewOrder/:id              controllers.ShoppingCtrl.viewOrder(id: Long)
+GET     /cart                       controllers.HomeController.cart
+
+
+#Admin options
+GET     /adminevents                controllers.HomeController.adminevents(cat:Long ?=0L)
+GET     /admineventticket           controllers.HomeController.admineventTicket(event:Long ?=0L)
+
+GET     /addevent                   controllers.HomeController.addEvent
+POST    /addEventSubmit             controllers.HomeController.addEventSubmit
+GET     /delEvent/:id               controllers.HomeController.deleteEvent(id:Long)
+GET     /updateEvent/:id            controllers.HomeController.updateEvent(id:Long)
+
+GET     /addticket                  controllers.HomeController.addTicket
+POST    /addTicketSubmit            controllers.HomeController.addTicketSubmit
+GET     /delTicket/:id              controllers.HomeController.deleteTicket(id:Long)
+GET     /updateTicket/:id           controllers.HomeController.updateTicket(id:Long)
+
+POST    /addContactSubmit           controllers.HomeController.addContactSubmit
+
+GET     /viewAccounts               controllers.HomeController.viewAccounts
+GET     /deleteUser                 controllers.HomeController.deleteUser(id:String)
+GET     /markAsRead                 controllers.HomeController.markAsRead(id:Long,status:Boolean)
+GET     /markAsProccessed           controllers.HomeController.markAsProccessed(id:Long,status:Boolean)
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

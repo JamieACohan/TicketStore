@@ -1,0 +1,56 @@
+@(contacts: List[models.Contact], user: models.users.User)
+
+@main("viewContact", user) {
+    <!--..CONTENT..-->
+    <div class="container-fluid" id="content">
+        <h2>Customer Contacts</h2>
+        <div class="row omb_row-sm-offset-3">
+            <table class="table table-responsive table-bordered">
+                <thead>
+                    <tr>
+                        <th class="greentext">Firstname</th>
+                        <th class="greentext">Lastname</th>
+                        <th class="greentext">Email</th>
+                        <th class="greentext">Phone</th>
+                        <th class="greentext">Message</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(c <- contacts) {
+                    @if(c.isRead == false) {
+                        <tr class = "danger">
+                            <td>@c.getFirstName</td>
+                            <td>@c.getLastName</td>
+                            <td>@c.getEmail</td>
+                            <td>@c.getPhone</td>
+                            <td>@c.getMessage</td>
+                            <td class="col-sm-1"><a href="@routes.HomeController.markAsRead(c.getId,true)" class="btn btn-success btn-sm whitetext" id="user-delete-button">
+                                <span class="glyphicon glyphicon-envelope"></span> Mark as read
+                            </a></td>
+                        </tr>
+                    }
+                    @if(c.isRead == true){
+                        <tr class = "success">
+                            <td>@c.getFirstName</td>
+                            <td>@c.getLastName</td>
+                            <td>@c.getEmail</td>
+                            <td>@c.getPhone</td>
+                            <td>@c.getMessage</td>
+                            <td class="col-sm-1"><a href="@routes.HomeController.markAsRead(c.getId,false)" class="btn btn-success btn-sm whitetext" id="user-delete-button">
+                                <span class="glyphicon glyphicon-envelope"></span> Mark as un-read
+                            </a></td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+            <br>
+            <br>
+        </div>
+
+
+    </div>
+        <!--END CONTENT-->
+
+}

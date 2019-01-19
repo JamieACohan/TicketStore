@@ -1,0 +1,36 @@
+@import helper._
+
+@(addUserForm: Form[models.users.User], user: models.users.User)
+
+@main("Sign Up", user) {
+
+    <!--..CONTENT..-->
+    <div class="container-fluid" id="content">
+        @if(flash.containsKey("success")) {
+            <div class="alert alert-success text-center">
+            @flash.get("success")
+            </div>
+        }
+        @if(flash.containsKey("danger")) {
+            <div class="alert alert-danger text-center">
+            @flash.get("danger")
+            </div>
+        }
+
+        <div class="row">
+            <h1 class="greentext">Sign up</h1>
+            <div class="col-lg-12 well" id="signup">
+
+            @form(action = routes.HomeController.signUpSubmit(), 'class -> "form-horizontal", 'role -> "form") {
+                @inputText(addUserForm("email"), '_label -> "Email", 'type -> "email", 'class -> "form-control")
+                @inputText(addUserForm("name"), '_label -> "Name", 'class -> "form-control", 'maxlength -> "30")
+                @inputPassword(addUserForm("password"), '_label -> "Password", 'class -> "form-control", 'maxlength -> "30")
+                <div class="actions">
+                    <input type="submit" value="Sign Up" class="btn btn-success">
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+
+}

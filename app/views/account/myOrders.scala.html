@@ -1,0 +1,72 @@
+@(orders: List[models.shopping.ShopOrder], user: models.users.User)
+@main("My Orders", user) {
+
+
+    <div class="container " id="content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" id="user-order-display">
+            <div class="row">
+                <a href = "@routes.HomeController.myOrders()" class="btn btn-success btn-lg" id="user-order-button">
+                    <span class="glyphicon glyphicon-calendar"></span>My Orders
+                </a>
+
+                <a href = "@routes.HomeController.updateDetails()" class="btn btn-success btn-lg" id="user-account-button">
+                    <span class="glyphicon glyphicon-user"></span>Update Details
+                </a>
+
+
+                <a href = "@routes.LoginController.deleteAccountPage()" type="button" class="btn btn-success btn-lg" id="user-delete-button">
+                    <span class="glyphicon glyphicon-trash"></span>Delete Account
+                </a>
+
+                <a href = "@routes.HomeController.reportProblem()" type="button" class="btn btn-success btn-lg" id="user-problem-button">
+                    <span class="glyphicon glyphicon-envelope"></span>Report problem
+                </a>
+
+                <hr>
+            </div>
+        </div>
+        <hr>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="user-order-display">
+            <div class="row">
+        <h2 class="greentext text-center">Order History</h2>
+        @if(orders.size < 1) {
+            <h3 class="text-center"> No orders have been placed on this account yet.</h3>
+        }
+        @if(orders.size > 0) {
+            <table class="table table-repsonsive table-bordered">
+                <thead>
+                    <tr>
+                        <th class="greentext">Order #</th>
+                        <th class="greentext">Date</th>
+                        <th class="greentext">Total</th>
+                        <th class="greentext">Order Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @for(o <- orders) {
+                    <tr>
+                        <td>@o.getId</td>
+                        <td>@o.getOrderDate</td>
+                        <td>€@("%.2f".format(o.getOrderTotal))</td>
+                        @if(o.isProccessed == true){
+                            <td>Your order has been <strong>Processed <span class="glyphicon glyphicon-thumbs-up"></span></strong></td>
+                        }
+                        @if(o.isProccessed == false){
+                            <td>Order has been <strong>received</strong> and will be processed soon <span class="glyphicon glyphicon-hourglass"></span></td>
+                        }
+                    </tr>
+
+                    @for(i <- o.getItems) {
+                        <td>Tickets : @i.getQuantity x €@("%.2f".format(i.getPrice)) @i.getTicket.getEvent.getEventName - @i.getTicket.getTicketType</td>
+
+                    }
+
+                </tbody>
+                }
+            </table>
+        }
+          </div>
+    </div>
+
+}

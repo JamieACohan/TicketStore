@@ -1,0 +1,125 @@
+@(user: models.users.User,env: play.api.Environment)
+
+@import play.api.Play.resource
+@import play.api.Play.current
+@import models.shopping._
+@import models._
+
+    <!-- Pass page title and user on to main -->
+@main("Cart", user) {
+
+    <!--..CONTENT..-->
+    <div class="container-fluid" id="cartContent">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <h5 id = iconCart><span class="glyphicon glyphicon-shopping-cart" id="iconCart"></span>
+                                        Shopping Cart</h5>
+                                </div>
+                                <div class="col-xs-6">
+                                    <a href="@routes.HomeController.events(0)">
+                                        <button type="button" class="btn btn-success btn-sm btn-block">
+                                            <span class="glyphicon glyphicon-share-alt"></span> Continue shopping
+                                        </button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @if(user.getBasket().getBasketItems().size() == 0){
+                        <br>
+                        <h3 class ="text-center">Cart is empty <span class="glyphicon glyphicon-shopping-cart"></span></h3>
+                    }
+
+                    @if(user.getBasket().getBasketItems().size() > 0){
+                            <!-- Start of For loop - For each p in products add a row -->
+                        @for(i <- user.getBasket().getBasketItems()) {
+
+
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                    @if(env.resource("public/images/eventImages/" + i.getTicket.getEvent.getId + ".jpg").isDefined) {
+                                        <img class="img-responsive" src="/assets/images/eventImages/@(i.getTicket.getEvent.getId + ".jpg")"/>
+                                    } else {
+                                        <img class="img-responsive" src="/assets/images/eventImages/noImage.png" alt="" >
+                                        }
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <h4 class="product-name"><strong>@i.getTicket.getEvent.getEventName</strong></h4>
+                                        <h4><small>@i.getTicket.getTicketType</small></h4>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="col-xs-6 text-right">
+                                            <h4><strong>Price</strong></h4>
+                                            <h4>&euro;@("%.2f".format(i.getPrice))</h4>
+                                        </div>
+                                        <div class="col-xs-4 pull-right">
+                                            <h4><strong>Quantity</strong></h4>
+                                            @i.getQuantity()
+                                            @if(i.getQuantity < i.getTicket.getQuantity) {
+                                                <a href="@routes.ShoppingCtrl.removeOne(i.getId)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                                                <a href="@routes.ShoppingCtrl.addOne(i.getId)"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                                            }
+                                            @if(i.getQuantity == i.getTicket.getQuantity) {
+                                                <a href="@routes.ShoppingCtrl.removeOne(i.getId)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                                                <span class="glyphicon glyphicon-plus-sign"></span>
+                                                <br>
+                                                Max reached
+                                            }
+                                            <a href="@routes.ShoppingCtrl.removeFromCart(i.getId)"><span class="glyphicon glyphicon-trash" id="removeCartBtn"></span></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                }
+                        @if(user.getBasket().getBasketItems().size() > 0){
+                        <div class="row">
+                            <div class="text-center">
+                                <div class="col-xs-9">
+                                </div>
+                                <div class="col-xs-3">
+                                    <a href="@routes.ShoppingCtrl.emptyBasket()" class="btn btn-danger btn-sm" onclick="return confirmDel();">
+                                        Empty Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+
+
+                    <div class="panel-footer">
+                        <div class="row text-center">
+                            <div class="col-xs-9">
+                                <h4 class="text-right"><strong>
+                                    Total: &euro;@("%.2f".format(user.getBasket.getBasketTotal))</strong></h4>
+                            </div>
+                            @if(user.getBasket.getBasketTotal > 0) {
+                                <div class="col-xs-3">
+                                    <form action="/placeOrder" method="GET">
+                                        <script
+                                        src="https://checkout.stripe.com/checkout.js" class="stripe-button btn-success"
+                                        data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+                                        data-amount="@user.getBasket.getStripeTotal"
+                                        data-name="TC Events"
+                                        data-description="Payment"
+                                        data-email="@user.getEmail()"
+                                        data-currency="EUR"
+                                        data-image="http://cdn.wallpapersafari.com/62/83/v3qT9H.jpg"
+                                        data-locale="auto"
+                                        data-zip-code="false">
+                                        </script>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

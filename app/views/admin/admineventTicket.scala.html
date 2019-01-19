@@ -1,0 +1,84 @@
+@(tickets: List[models.Ticket], e: Event, user: models.users.User, env: play.api.Environment)
+
+@import helper._
+
+
+@main("Tickets", user) {
+    <!--..CONTENT..-->
+    <div class="container" id = "seatingplans">
+        @if(flash.containsKey("success")) {
+            <div class="alert alert-success text-center">
+            @flash.get("success")
+            </div>
+        }
+        <div class="row well">
+            <div class="col-lg-5 col-md-5 col-sm-6 col-xs-12">
+            @if(env.resource("public/images/eventImages/" + e.getId + ".jpg").isDefined) {
+                <img class="img-responsive" src="/assets/images/eventImages/@(e.getId + ".jpg")"/>
+            } else {
+                <img class="img-responsive" src="/assets/images/eventImages/noImage.png" alt="" >
+                }
+            </div>
+
+            <div class="col-lg-7 col-md-7 col-sm-6 col-xs-12" id="eventInfo">
+                <h1>@e.getTitle, @e.getEventName</h1>
+                <p>@e.getLocation</p>
+                <p>@e.getDate, @e.getTime</p>
+                <p><a><a href = "@routes.HomeController.addTicket()" type="button" class="btn btn-success btn-md" >
+                    <span class="glyphicon glyphicon-plus"></span>Add Ticket
+                 </a></p>
+            </div>
+        </div>
+
+        <div class="row well" id="tickets">
+        <h1 class="text-center">Tickets</h1>
+
+            @for(t <- tickets) {
+                <div class="col-md-4 text-center">
+                    <div class="panel panel-success panel-pricing">
+                        <div class="panel-heading">
+                            <i class="fa fa-ticket whitetext" aria-hidden="true"></i>
+                            <h3 class="whitetext">@e.getTitle : @e.getEventName</h3>
+                            <h3 class="whitetext">@t.getTicketType ticket</h3>
+                        </div>
+                        <div class="panel-body text-center">
+                            <p><strong>€@("%.2f".format(t.getPrice))</strong></p>
+                        </div>
+                        <ul class="list-group text-center">
+                            <li class="list-group-item"><i class="fa fa-info-circle "></i> @t.getDescription</li>
+                        </ul>
+
+                            @if(user.getRole.equals("admin")) {
+                                <a href="@routes.HomeController.updateTicket(t.getTicketID)" class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-wrench"></span>
+                                </a>
+                                <a href="@routes.HomeController.deleteTicket(t.getTicketID)" class = "btn btn-danger"
+                                onclick="return confirmDel();">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            }
+
+
+                        <div class="panel-footer">
+                        @if(t.getQuantity > 0) {
+                            <a href="@routes.ShoppingCtrl.addToBasket(t.getTicketID())" class="btn btn-lg btn-block btn-success">
+                                Add to Cart</a>
+                        } else {
+                            <button class = "btn btn-lg btn-block btn-danger">
+                                Out of Stock </button>
+                        }
+                        </div>
+                    </div>
+                </div><!-- /ticket -->
+        }
+    </div>
+
+
+    <script>
+            function confirmDel() {
+                return confirm('Are you sure you want to delete this ticket?');
+            }
+    </script>
+
+        <!--END CONTENT-->
+}
